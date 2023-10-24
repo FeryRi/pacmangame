@@ -126,6 +126,7 @@ def move():
             course.y = plan.y
 
         up()
+        
         goto(point.x + 10, point.y + 10)
         dot(20, 'red')
 
@@ -135,7 +136,7 @@ def move():
         if abs(pacman - point) < 20:
             return
 
-    ontimer(move, 100)
+    ontimer(move, 10)
 
 def change(x, y):
     "Change pacman aim if valid."
