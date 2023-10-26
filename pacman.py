@@ -1,6 +1,7 @@
 from random import choice
 from turtle import *
 from freegames import floor, vector
+import time
 
 state = {'score': 0}
 path = Turtle(visible=False)
@@ -13,6 +14,7 @@ ghosts = [
     [vector(100, 160), vector(0, -5)],
     [vector(100, -160), vector(-5, 0)],
 ]
+green_ghost = [vector(0,0), vector(10,10)]
 tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
@@ -35,7 +37,28 @@ tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ]
+def move_green_ghost():
+    "Move the green ghost."
+    green_point, green_course = green_ghost
+    if valid(green_point + green_course):
+        green_point.move(green_course)
+    else:
+        options = [
+            vector(5, 0),
+            vector(-5, 0),
+            vector(0, 5),
+            vector(0, -5),
+        ]
+        plan = choice(options)
+        green_course.x = plan.x
+        green_course.y = plan.y
 
+    up()
+    goto(green_point.x + 10, green_point.y + 10)
+    dot(20, 'green')  
+
+    ontimer(move_green_ghost, 50)  
+    
 def square(x, y):
     "Draw square using path at (x, y)."
     path.up()
@@ -126,7 +149,6 @@ def move():
             course.y = plan.y
 
         up()
-        
         goto(point.x + 10, point.y + 10)
         dot(20, 'red')
 
@@ -136,7 +158,7 @@ def move():
         if abs(pacman - point) < 20:
             return
 
-    ontimer(move, 10)
+    ontimer(move, 100)
 
 def change(x, y):
     "Change pacman aim if valid."
@@ -157,4 +179,5 @@ onkey(lambda: change(0, 5), 'Up')
 onkey(lambda: change(0, -5), 'Down')
 world()
 move()
+move_green_ghost()
 done()
